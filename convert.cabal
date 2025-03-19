@@ -19,6 +19,7 @@ common configuration
 
 library
   import:              configuration
-  build-depends:       base
+  build-depends:       base, bytestring ^>= 0.12.2.0, text ^>= 2.1.2
   hs-source-dirs:      source
   exposed-modules:     Data.Convert
+  other-modules:       Data.Convert.Class Data.Convert.Instance
