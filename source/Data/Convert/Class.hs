@@ -7,12 +7,12 @@ import Data.Bifunctor
 import GHC.Stack
 import Data.Convert.Tools
 
-class Convert source target where
-    convert :: source -> target
-class Transform source target where
-    type Failure source target
-    type Failure source target = ()
-    transform :: source -> Either (Failure source target) target
+class Convert a b where
+    convert :: a -> b
+class Transform a b where
+    type Failure a b
+    type Failure a b = ()
+    transform :: a -> Either (Failure a b) b
 
 transformSimple :: Failure a b ~ () => Transform a b => a -> Maybe b
 transformSimple = eitherToMaybe . transform
