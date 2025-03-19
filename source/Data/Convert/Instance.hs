@@ -17,22 +17,22 @@ import Data.Convert.Tools
 instance Convert Bool Natural where
     convert False = 0
     convert True = 1
-instance Transform Natural Bool where
-    transform 0 = Right False
-    transform 1 = Right True
-    transform _ = Left ()
+instance Partial Natural Bool where
+    partial 0 = Right False
+    partial 1 = Right True
+    partial _ = Left ()
 
 instance Convert Word8 Natural where convert = fromIntegral
-instance Transform Natural Word8 where transform = maybeToEither . toIntegralSized
+instance Partial Natural Word8 where partial = maybeToEither . toIntegralSized
 
 instance Convert Word16 Natural where convert = fromIntegral
-instance Transform Natural Word16 where transform = maybeToEither . toIntegralSized
+instance Partial Natural Word16 where partial = maybeToEither . toIntegralSized
 
 instance Convert Word32 Natural where convert = fromIntegral
-instance Transform Natural Word32 where transform = maybeToEither . toIntegralSized
+instance Partial Natural Word32 where partial = maybeToEither . toIntegralSized
 
 instance Convert Word64 Natural where convert = fromIntegral
-instance Transform Natural Word64 where transform = maybeToEither . toIntegralSized
+instance Partial Natural Word64 where partial = maybeToEither . toIntegralSized
 
 instance Convert ByteString Natural where
     convert = flip B.foldl' 0 $ \ n a -> n !<<. 8 .|. fromIntegral a
@@ -42,6 +42,6 @@ instance Convert Natural ByteString where
         go n = Just (fromIntegral n, n !>>. 8)
 
 instance Convert Text ByteString where convert = T.encodeUtf8
-instance Transform ByteString Text where
+instance Partial ByteString Text where
     type Failure ByteString Text = T.UnicodeException
-    transform = T.decodeUtf8'
+    partial = T.decodeUtf8'

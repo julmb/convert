@@ -1,6 +1,6 @@
 {-# LANGUAGE TypeFamilies #-}
 
-module Data.Convert.Class (Convert (..), Transform (..), transformSimple, transformThrow, transformDisplay) where
+module Data.Convert.Class (Convert (..), Partial (..), partialThrow, partialMaybe, partialDisplay) where
 
 import Control.Exception
 import Data.Bifunctor
@@ -9,16 +9,16 @@ import Data.Convert.Tools
 
 class Convert a b where
     convert :: a -> b
-class Transform a b where
+class Partial a b where
     type Failure a b
     type Failure a b = ()
-    transform :: a -> Either (Failure a b) b
+    partial :: a -> Either (Failure a b) b
 
-transformSimple :: Failure a b ~ () => Transform a b => a -> Maybe b
-transformSimple = eitherToMaybe . transform
+partialThrow :: HasCallStack => Exception (Failure a b) => Partial a b => a -> b
+partialThrow = either throw id . partial
 
-transformThrow :: HasCallStack => Exception (Failure a b) => Transform a b => a -> b
-transformThrow = either throw id . transform
+partialMaybe :: Failure a b ~ () => Partial a b => a -> Maybe b
+partialMaybe = eitherToMaybe . partial
 
-transformDisplay :: Exception (Failure a b) => Transform a b => a -> Either String b
-transformDisplay = first displayException . transform
+partialDisplay :: Exception (Failure a b) => Partial a b => a -> Either String b
+partialDisplay = first displayException . partial
