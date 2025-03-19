@@ -13,6 +13,11 @@ import Data.Bits
 import Data.ByteString qualified as B
 import Data.Text.Encoding.Error qualified as T
 import Data.Convert.Tools
+import Control.Exception
+import Data.Int
+
+instance Exception ()
+instance Exception String
 
 instance Convert Bool Natural where
     convert False = 0
@@ -33,6 +38,18 @@ instance Partial Natural Word32 where partial = maybeToEither . toIntegralSized
 
 instance Convert Word64 Natural where convert = fromIntegral
 instance Partial Natural Word64 where partial = maybeToEither . toIntegralSized
+
+instance Convert Int Int64 where convert = fromIntegral
+instance Partial Int64 Int where partial = maybeToEither . toIntegralSized
+
+instance Partial Int Word8 where partial = maybeToEither . toIntegralSized
+instance Partial Word8 Int where partial = maybeToEither . toIntegralSized
+
+instance Partial Int Natural where partial = maybeToEither . toIntegralSized
+instance Partial Natural Int where partial = maybeToEither . toIntegralSized
+
+instance Convert Natural Integer where convert = toInteger
+instance Partial Integer Natural where partial = maybeToEither . toIntegralSized
 
 instance Convert ByteString Natural where
     convert = flip B.foldl' 0 $ \ n a -> n !<<. 8 .|. fromIntegral a
