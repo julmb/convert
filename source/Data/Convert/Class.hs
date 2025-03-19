@@ -3,6 +3,7 @@
 module Data.Convert.Class (Convert (..), Partial (..), into, partialThrow, partialMaybe, partialDisplay) where
 
 import Control.Exception
+import Data.Kind
 import Data.Bifunctor
 import Data.Convert.Tools
 import GHC.Stack
@@ -10,7 +11,7 @@ import GHC.Stack
 class Convert a b where
     convert :: a -> b
 class Partial a b where
-    type Failure a b
+    type Failure a b :: Type
     type Failure a b = ()
     partial :: a -> Either (Failure a b) b
 
