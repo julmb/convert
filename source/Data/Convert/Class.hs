@@ -4,8 +4,8 @@ module Data.Convert.Class (Convert (..), Partial (..), partialThrow, partialMayb
 
 import Control.Exception
 import Data.Bifunctor
-import GHC.Stack
 import Data.Convert.Tools
+import GHC.Stack
 
 class Convert a b where
     convert :: a -> b
