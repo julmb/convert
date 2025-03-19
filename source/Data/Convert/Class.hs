@@ -1,37 +1,28 @@
-{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE TypeFamilies #-}
 
-module Data.Convert.Class
-(
-    ConvertException (..), Convert (..), Transform (..),
-    transformThrow, transformShow,
-    resultNone, resultFail, resultError
-)
-where
+module Data.Convert.Class (maybeToEither, eitherToMaybe, Convert (..), Transform (..), transformSimple, transformThrow) where
 
 import Control.Exception
-import Data.Bifunctor
 import GHC.Stack
 
-data ConvertException = None | Fail String | forall e. Exception e => Error e
+maybeToEither :: Maybe a -> Either () a
+maybeToEither = maybe (Left ()) Right
 
-deriving instance Show ConvertException
-deriving instance Exception ConvertException
+eitherToMaybe :: Either () a -> Maybe a
+eitherToMaybe = either (\ () -> Nothing) Just
 
--- TODO: Maybe we want Transform to have a type family that specifies the left either type?
-class Convert source target where convert :: source -> target
-class Transform source target where transform :: source -> Either ConvertException target
+class Convert source target where
+    convert :: source -> target
+class Transform source target where
+    type Failure source target
+    type Failure source target = ()
+    transform :: source -> Either (Failure source target) target
 
-transformThrow :: HasCallStack => Transform source target => source -> target
+instance Convert (Maybe a) (Either () a) where convert = maybeToEither
+instance Convert (Either () a) (Maybe a) where convert = eitherToMaybe
+
+transformSimple :: Failure a b ~ () => Transform a b => a -> Maybe b
+transformSimple = eitherToMaybe . transform
+
+transformThrow :: HasCallStack => Exception (Failure a b) => Transform a b => a -> b
 transformThrow = either throw id . transform
-
-transformShow :: Transform source target => source -> Either String target
-transformShow = first show . transform
-
-resultNone :: Maybe a -> Either ConvertException a
-resultNone = maybe (Left None) Right
-
-resultFail :: Either String a -> Either ConvertException a
-resultFail = first Fail
-
-resultError :: Exception e => Either e a -> Either ConvertException a
-resultError = first Error
