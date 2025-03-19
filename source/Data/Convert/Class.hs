@@ -1,6 +1,6 @@
 {-# LANGUAGE TypeFamilies #-}
 
-module Data.Convert.Class (Convert (..), Partial (..), partialThrow, partialMaybe, partialDisplay) where
+module Data.Convert.Class (Convert (..), Partial (..), into, partialThrow, partialMaybe, partialDisplay) where
 
 import Control.Exception
 import Data.Bifunctor
@@ -13,6 +13,9 @@ class Partial a b where
     type Failure a b
     type Failure a b = ()
     partial :: a -> Either (Failure a b) b
+
+into :: forall b a. Convert a b => a -> b
+into = convert
 
 partialThrow :: HasCallStack => Exception (Failure a b) => Partial a b => a -> b
 partialThrow = either throw id . partial
