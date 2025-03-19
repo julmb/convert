@@ -2,7 +2,7 @@
 
 module Data.Convert.Class
 (
-    Convert (..), Partial (..), into,
+    Convert (..), Partial (..),
     partialError, partialThrow
 )
 where
@@ -12,9 +12,6 @@ import GHC.Stack
 
 class Convert a b where convert :: a -> b
 class Partial e a b | a b -> e where partial :: a -> Either e b
-
-into :: forall b a. Convert a b => a -> b
-into = convert
 
 -- TODO: we do not really care about what type the error value is, we just want to throw it
 
