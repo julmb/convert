@@ -1,8 +1,9 @@
 {-# LANGUAGE TypeFamilies #-}
 
-module Data.Convert.Class (maybeToEither, eitherToMaybe, Convert (..), Transform (..), transformSimple, transformThrow) where
+module Data.Convert.Class (maybeToEither, eitherToMaybe, Convert (..), Transform (..), transformSimple, transformThrow, transformDisplay) where
 
 import Control.Exception
+import Data.Bifunctor
 import GHC.Stack
 
 maybeToEither :: Maybe a -> Either () a
@@ -26,3 +27,6 @@ transformSimple = eitherToMaybe . transform
 
 transformThrow :: HasCallStack => Exception (Failure a b) => Transform a b => a -> b
 transformThrow = either throw id . transform
+
+transformDisplay :: Exception (Failure a b) => Transform a b => a -> Either String b
+transformDisplay = first displayException . transform
