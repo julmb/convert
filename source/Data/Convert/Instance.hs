@@ -12,6 +12,7 @@ import Data.Word
 import Data.Bits
 import Data.ByteString qualified as B
 import Data.Text.Encoding.Error qualified as T
+import Data.Convert.Tools
 
 instance Convert Bool Natural where
     convert False = 0
