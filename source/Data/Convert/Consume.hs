@@ -5,10 +5,10 @@ module Data.Convert.Consume (Display (..), ConvertException (..), fromWrap, from
 
 import Type.Reflection
 import Control.Exception
-import Data.Convert.Class
-import GHC.Stack
 import Data.Bifunctor
+import Data.Convert.Class
 import Text.Printf
+import GHC.Stack
 
 class Display a where display :: a -> Maybe String
 
