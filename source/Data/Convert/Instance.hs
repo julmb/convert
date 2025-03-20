@@ -16,45 +16,45 @@ import Data.Text.Encoding.Error
 import Data.Convert.Tools
 
 instance Convert Bool Natural where
-    convert False = 0
-    convert True = 1
+    from False = 0
+    from True = 1
 instance Partial Natural Bool where
-    partial 0 = Right False
-    partial 1 = Right True
-    partial _ = Left ()
+    fromTry 0 = Right False
+    fromTry 1 = Right True
+    fromTry _ = Left ()
 
-instance Convert Word8 Natural where convert = fromIntegral
-instance Partial Natural Word8 where partial = maybeToEither . toIntegralSized
+instance Convert Word8 Natural where from = fromIntegral
+instance Partial Natural Word8 where fromTry = maybeToEither . toIntegralSized
 
-instance Convert Word16 Natural where convert = fromIntegral
-instance Partial Natural Word16 where partial = maybeToEither . toIntegralSized
+instance Convert Word16 Natural where from = fromIntegral
+instance Partial Natural Word16 where fromTry = maybeToEither . toIntegralSized
 
-instance Convert Word32 Natural where convert = fromIntegral
-instance Partial Natural Word32 where partial = maybeToEither . toIntegralSized
+instance Convert Word32 Natural where from = fromIntegral
+instance Partial Natural Word32 where fromTry = maybeToEither . toIntegralSized
 
-instance Convert Word64 Natural where convert = fromIntegral
-instance Partial Natural Word64 where partial = maybeToEither . toIntegralSized
+instance Convert Word64 Natural where from = fromIntegral
+instance Partial Natural Word64 where fromTry = maybeToEither . toIntegralSized
 
-instance Convert Int Int64 where convert = fromIntegral
-instance Partial Int64 Int where partial = maybeToEither . toIntegralSized
+instance Convert Int Int64 where from = fromIntegral
+instance Partial Int64 Int where fromTry = maybeToEither . toIntegralSized
 
-instance Partial Int Word8 where partial = maybeToEither . toIntegralSized
-instance Partial Word8 Int where partial = maybeToEither . toIntegralSized
+instance Partial Int Word8 where fromTry = maybeToEither . toIntegralSized
+instance Partial Word8 Int where fromTry = maybeToEither . toIntegralSized
 
-instance Partial Int Natural where partial = maybeToEither . toIntegralSized
-instance Partial Natural Int where partial = maybeToEither . toIntegralSized
+instance Partial Int Natural where fromTry = maybeToEither . toIntegralSized
+instance Partial Natural Int where fromTry = maybeToEither . toIntegralSized
 
-instance Convert Natural Integer where convert = fromIntegral
-instance Partial Integer Natural where partial = maybeToEither . toIntegralSized
+instance Convert Natural Integer where from = fromIntegral
+instance Partial Integer Natural where fromTry = maybeToEither . toIntegralSized
 
 instance Convert ByteString Natural where
-    convert = flip B.foldl' 0 $ \ n a -> n !<<. 8 .|. fromIntegral a
+    from = flip B.foldl' 0 $ \ n a -> n !<<. 8 .|. fromIntegral a
 instance Convert Natural ByteString where
-    convert = B.reverse . B.unfoldr go where
+    from = B.reverse . B.unfoldr go where
         go 0 = Nothing
         go n = Just (fromIntegral n, n !>>. 8)
 
-instance Convert Text ByteString where convert = T.encodeUtf8
+instance Convert Text ByteString where from = T.encodeUtf8
 instance Partial ByteString Text where
     type Fail ByteString Text = UnicodeException
-    partial = T.decodeUtf8'
+    fromTry = T.decodeUtf8'

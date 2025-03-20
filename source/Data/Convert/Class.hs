@@ -3,9 +3,9 @@
 
 module Data.Convert.Class
 (
-    ConvertException (..),
-    Convert (..), Partial (..),
-    partialThrow, partialString, partialFail
+    Convert (..), into,
+    Partial (..), intoTry,
+    ConvertException (..), fromWrap, fromThrow, fromShow, fromFail
 )
 where
 
@@ -16,11 +16,18 @@ import Text.Printf
 import Data.Bifunctor
 import Data.Kind
 
-class Convert a b where convert :: a -> b
+class Convert a b where from :: a -> b
+
+into :: forall b a. Convert a b => a -> b
+into = from
+
 class Partial a b where
     type Fail a b :: Type
     type Fail a b = ()
-    partial :: a -> Either (Fail a b) b
+    fromTry :: a -> Either (Fail a b) b
+
+intoTry :: forall b a. Partial a b => a -> Either (Fail a b) b
+intoTry = fromTry
 
 -- exceptions
 
@@ -33,14 +40,14 @@ type Track a b c = (Typeable a, Typeable b, Typeable c, Show c)
 instance Track a b c => Exception (ConvertException a b c) where
     displayException = printf "convert from %s to %s: %s" (show $ typeRep @a) (show $ typeRep @b) . show . content
 
-partialWrap :: Partial a b => a -> Either (ConvertException a b (Fail a b)) b
-partialWrap = first ConvertException . partial
+fromWrap :: Partial a b => a -> Either (ConvertException a b (Fail a b)) b
+fromWrap = first ConvertException . fromTry
 
-partialThrow :: HasCallStack => Track a b (Fail a b) => Partial a b => a -> b
-partialThrow = either throw id . partialWrap
+fromThrow :: HasCallStack => Track a b (Fail a b) => Partial a b => a -> b
+fromThrow = either throw id . fromWrap
 
-partialString :: Track a b (Fail a b) => Partial a b => a -> Either String b
-partialString = first displayException . partialWrap
+fromShow :: Track a b (Fail a b) => Partial a b => a -> Either String b
+fromShow = first displayException . fromWrap
 
-partialFail :: MonadFail m => Track a b (Fail a b) => Partial a b => a -> m b
-partialFail = either fail pure . partialString
+fromFail :: MonadFail m => Track a b (Fail a b) => Partial a b => a -> m b
+fromFail = either fail pure . fromShow
