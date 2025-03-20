@@ -1,4 +1,5 @@
 {-# OPTIONS_GHC -Wno-orphans #-}
+{-# LANGUAGE TypeFamilies #-}
 
 module Data.Convert.Instance () where
 
@@ -11,6 +12,8 @@ import Data.Word
 import Data.Bits
 import Data.ByteString qualified as B
 import Data.Int
+import Data.Text.Encoding.Error
+import Data.Convert.Tools
 
 instance Convert Bool Natural where
     convert False = 0
@@ -18,31 +21,31 @@ instance Convert Bool Natural where
 instance Partial Natural Bool where
     partial 0 = Right False
     partial 1 = Right True
-    partial _ = Left Empty
+    partial _ = Left ()
 
 instance Convert Word8 Natural where convert = fromIntegral
-instance Partial Natural Word8 where partial = mkEmpty . toIntegralSized
+instance Partial Natural Word8 where partial = maybeToEither . toIntegralSized
 
 instance Convert Word16 Natural where convert = fromIntegral
-instance Partial Natural Word16 where partial = mkEmpty . toIntegralSized
+instance Partial Natural Word16 where partial = maybeToEither . toIntegralSized
 
 instance Convert Word32 Natural where convert = fromIntegral
-instance Partial Natural Word32 where partial = mkEmpty . toIntegralSized
+instance Partial Natural Word32 where partial = maybeToEither . toIntegralSized
 
 instance Convert Word64 Natural where convert = fromIntegral
-instance Partial Natural Word64 where partial = mkEmpty . toIntegralSized
+instance Partial Natural Word64 where partial = maybeToEither . toIntegralSized
 
 instance Convert Int Int64 where convert = fromIntegral
-instance Partial Int64 Int where partial = mkEmpty . toIntegralSized
+instance Partial Int64 Int where partial = maybeToEither . toIntegralSized
 
-instance Partial Int Word8 where partial = mkEmpty . toIntegralSized
-instance Partial Word8 Int where partial = mkEmpty . toIntegralSized
+instance Partial Int Word8 where partial = maybeToEither . toIntegralSized
+instance Partial Word8 Int where partial = maybeToEither . toIntegralSized
 
-instance Partial Int Natural where partial = mkEmpty . toIntegralSized
-instance Partial Natural Int where partial = mkEmpty . toIntegralSized
+instance Partial Int Natural where partial = maybeToEither . toIntegralSized
+instance Partial Natural Int where partial = maybeToEither . toIntegralSized
 
 instance Convert Natural Integer where convert = fromIntegral
-instance Partial Integer Natural where partial = mkEmpty . toIntegralSized
+instance Partial Integer Natural where partial = maybeToEither . toIntegralSized
 
 instance Convert ByteString Natural where
     convert = flip B.foldl' 0 $ \ n a -> n !<<. 8 .|. fromIntegral a
@@ -52,4 +55,6 @@ instance Convert Natural ByteString where
         go n = Just (fromIntegral n, n !>>. 8)
 
 instance Convert Text ByteString where convert = T.encodeUtf8
-instance Partial ByteString Text where partial = mkError . T.decodeUtf8'
+instance Partial ByteString Text where
+    type Fail ByteString Text = UnicodeException
+    partial = T.decodeUtf8'
