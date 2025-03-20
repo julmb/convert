@@ -41,7 +41,7 @@ instance Partial Word8 Int where partial = mkEmpty . toIntegralSized
 instance Partial Int Natural where partial = mkEmpty . toIntegralSized
 instance Partial Natural Int where partial = mkEmpty . toIntegralSized
 
-instance Convert Natural Integer where convert = toInteger
+instance Convert Natural Integer where convert = fromIntegral
 instance Partial Integer Natural where partial = mkEmpty . toIntegralSized
 
 instance Convert ByteString Natural where
