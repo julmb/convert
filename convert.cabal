@@ -22,4 +22,4 @@ library
   build-depends:       base, bytestring ^>= 0.12.2.0, text ^>= 2.1.2
   hs-source-dirs:      source
   exposed-modules:     Data.Convert
-  other-modules:       Data.Convert.Tools Data.Convert.Class Data.Convert.Instance
+  other-modules:       Data.Convert.Tools Data.Convert.Class Data.Convert.Consume Data.Convert.Instance
