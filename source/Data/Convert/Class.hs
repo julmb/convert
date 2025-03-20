@@ -24,6 +24,8 @@ class Partial a b where
 
 -- exceptions
 
+-- TODO: add Display type class and require on content for exception building
+
 newtype ConvertException a b c = ConvertException { content :: c } deriving Show
 
 type Track a b c = (Typeable a, Typeable b, Typeable c, Show c)
