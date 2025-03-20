@@ -10,9 +10,9 @@ into :: forall b a. Convert a b => a -> b
 into = from
 
 class Partial a b where
-    type Fail a b :: Type
-    type Fail a b = ()
-    fromTry :: a -> Either (Fail a b) b
+    type Failure a b :: Type
+    type Failure a b = ()
+    fromTry :: a -> Either (Failure a b) b
 
-intoTry :: forall b a. Partial a b => a -> Either (Fail a b) b
+intoTry :: forall b a. Partial a b => a -> Either (Failure a b) b
 intoTry = fromTry

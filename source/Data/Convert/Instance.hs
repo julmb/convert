@@ -56,5 +56,5 @@ instance Convert Natural ByteString where
 
 instance Convert Text ByteString where from = T.encodeUtf8
 instance Partial ByteString Text where
-    type Fail ByteString Text = UnicodeException
+    type Failure ByteString Text = UnicodeException
     fromTry = T.decodeUtf8'
