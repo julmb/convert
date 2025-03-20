@@ -1,5 +1,4 @@
 {-# LANGUAGE NoPolyKinds #-}
-{-# LANGUAGE AllowAmbiguousTypes #-}
 {-# LANGUAGE TypeFamilies #-}
 
 module Data.Convert.Class
