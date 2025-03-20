@@ -1,6 +1,7 @@
 {-# LANGUAGE NoPolyKinds #-}
+{-# LANGUAGE UndecidableInstances #-}
 
-module Data.Convert.Consume (ConvertException (..), fromWrap, fromThrow, fromShow, fromFail) where
+module Data.Convert.Consume (Display (..), ConvertException (..), fromWrap, fromThrow, fromShow, fromFail) where
 
 import Type.Reflection
 import Control.Exception
@@ -9,23 +10,28 @@ import GHC.Stack
 import Data.Bifunctor
 import Text.Printf
 
--- TODO: add Display type class and require on content for exception building
+class Display a where display :: a -> Maybe String
 
-newtype ConvertException a b c = ConvertException { content :: c } deriving Show
+instance Display () where display () = Nothing
+instance Display String where display = Just
+instance {-# OVERLAPPABLE #-} Exception e => Display e where display = Just . displayException
 
-type Track a b c = (Typeable a, Typeable b, Typeable c, Show c)
+newtype ConvertException a b c = ConvertException { content :: c }
 
-instance Track a b c => Exception (ConvertException a b c) where
-    displayException = printf "convert from %s to %s: %s" (show $ typeRep @a) (show $ typeRep @b) . show . content
+instance (Typeable a, Typeable b, Display c) => Show (ConvertException a b c) where
+    show = compose . display . content where
+        compose = maybe base $ printf "%s: %s" base
+        base = printf "could not convert from %s to %s" (show $ typeRep @a) (show $ typeRep @b)
+instance (Typeable a, Typeable b, Typeable c, Display c) => Exception (ConvertException a b c)
 
 fromWrap :: Partial a b => a -> Either (ConvertException a b (Fail a b)) b
 fromWrap = first ConvertException . fromTry
 
-fromThrow :: HasCallStack => Track a b (Fail a b) => Partial a b => a -> b
+fromThrow :: HasCallStack => Typeable a => Typeable b => Typeable (Fail a b) => Display (Fail a b) => Partial a b => a -> b
 fromThrow = either throw id . fromWrap
 
-fromShow :: Track a b (Fail a b) => Partial a b => a -> Either String b
-fromShow = first displayException . fromWrap
+fromShow :: Typeable a => Typeable b => Display (Fail a b) => Partial a b => a -> Either String b
+fromShow = first show . fromWrap
 
-fromFail :: MonadFail m => Track a b (Fail a b) => Partial a b => a -> m b
+fromFail :: MonadFail m => Typeable a => Typeable b => Display (Fail a b) => Partial a b => a -> m b
 fromFail = either fail pure . fromShow
