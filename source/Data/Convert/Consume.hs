@@ -1,11 +1,12 @@
 {-# LANGUAGE NoPolyKinds #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Data.Convert.Consume (Display (..), ConvertException (..), fromWrap, fromThrow, fromShow, fromFail) where
+module Data.Convert.Consume (Display (..), ConvertException (..), fromWrap, fromThrow, fromMaybe, fromShow, fromFail) where
 
 import Type.Reflection
 import Control.Exception
 import Data.Bifunctor
+import Data.Convert.Tools
 import Data.Convert.Class
 import Text.Printf
 import GHC.Stack
@@ -29,6 +30,9 @@ fromWrap = first ConvertException . fromTry
 
 fromThrow :: HasCallStack => Typeable a => Typeable b => Typeable (Failure a b) => Display (Failure a b) => Partial a b => a -> b
 fromThrow = either throw id . fromWrap
+
+fromMaybe :: Partial a b => Failure a b ~ () => a -> Maybe b
+fromMaybe = eitherToMaybe . fromTry
 
 fromShow :: Typeable a => Typeable b => Display (Failure a b) => Partial a b => a -> Either String b
 fromShow = first show . fromWrap
