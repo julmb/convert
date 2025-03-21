@@ -21,7 +21,8 @@ instance Partial Natural Bool where
     fromTry _ = Left ()
 
 instance Convert ByteString Natural where
-    from = flip B.foldl' 0 $ \ n a -> n !<<. 8 .|. fromIntegral a
+    from = B.foldl' go 0 where
+        go n a = n !<<. 8 .|. fromIntegral a
 instance Convert Natural ByteString where
     from = B.reverse . B.unfoldr go where
         go 0 = Nothing
