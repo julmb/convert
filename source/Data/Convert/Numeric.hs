@@ -49,6 +49,16 @@ instance Partial Word64 Int32 where fromTry = maybeToEither . toIntegralSized
 instance Partial Word64 Int64 where fromTry = maybeToEither . toIntegralSized
 instance Partial Word64 Int where fromTry = maybeToEither . toIntegralSized
 
+instance Partial Word Word8 where fromTry = maybeToEither . toIntegralSized
+instance Partial Word Word16 where fromTry = maybeToEither . toIntegralSized
+instance Partial Word Word32 where fromTry = maybeToEither . toIntegralSized
+instance Convert Word Word64 where from = fromIntegral
+instance Partial Word Int8 where fromTry = maybeToEither . toIntegralSized
+instance Partial Word Int16 where fromTry = maybeToEither . toIntegralSized
+instance Partial Word Int32 where fromTry = maybeToEither . toIntegralSized
+instance Partial Word Int64 where fromTry = maybeToEither . toIntegralSized
+instance Partial Word Int where fromTry = maybeToEither . toIntegralSized
+
 instance Partial Int8 Word8 where fromTry = maybeToEither . toIntegralSized
 instance Partial Int8 Word16 where fromTry = maybeToEither . toIntegralSized
 instance Partial Int8 Word32 where fromTry = maybeToEither . toIntegralSized
@@ -88,6 +98,16 @@ instance Partial Int64 Int8 where fromTry = maybeToEither . toIntegralSized
 instance Partial Int64 Int16 where fromTry = maybeToEither . toIntegralSized
 instance Partial Int64 Int32 where fromTry = maybeToEither . toIntegralSized
 instance Convert Int64 Int where from = fromIntegral
+
+instance Partial Int Word8 where fromTry = maybeToEither . toIntegralSized
+instance Partial Int Word16 where fromTry = maybeToEither . toIntegralSized
+instance Partial Int Word32 where fromTry = maybeToEither . toIntegralSized
+instance Partial Int Word64 where fromTry = maybeToEither . toIntegralSized
+instance Partial Int Word where fromTry = maybeToEither . toIntegralSized
+instance Partial Int Int8 where fromTry = maybeToEither . toIntegralSized
+instance Partial Int Int16 where fromTry = maybeToEither . toIntegralSized
+instance Partial Int Int32 where fromTry = maybeToEither . toIntegralSized
+instance Convert Int Int64 where from = fromIntegral
 
 instance Convert Word8 Natural where from = fromIntegral
 instance Partial Natural Word8 where fromTry = maybeToEither . toIntegralSized
