@@ -1,5 +1,4 @@
 {-# OPTIONS_GHC -Wno-orphans #-}
-{-# LANGUAGE TypeFamilies #-}
 
 module Data.Convert.Instance () where
 
@@ -15,7 +14,7 @@ import Numeric.Natural
 instance Convert Bool Natural where
     from False = 0
     from True = 1
-instance Partial Natural Bool where
+instance Partial Natural Bool () where
     fromTry 0 = Right False
     fromTry 1 = Right True
     fromTry _ = Left ()
@@ -28,8 +27,5 @@ instance Convert ByteString Natural where
     from = B.foldl' go 0 where
         go n a = n !<<. 8 .|. fromIntegral a
 
-instance Convert Text ByteString where
-    from = T.encodeUtf8
-instance Partial ByteString Text where
-    type Failure ByteString Text = UnicodeException
-    fromTry = T.decodeUtf8'
+instance Convert Text ByteString where from = T.encodeUtf8
+instance Partial ByteString Text UnicodeException where fromTry = T.decodeUtf8'
