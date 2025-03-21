@@ -28,14 +28,14 @@ instance (Typeable a, Typeable b, Typeable c, Display c) => Exception (ConvertEx
 fromWrap :: Partial a b => a -> Either (ConvertException a b (Failure a b)) b
 fromWrap = first ConvertException . fromTry
 
-fromThrow :: HasCallStack => Typeable a => Typeable b => Typeable (Failure a b) => Display (Failure a b) => Partial a b => a -> b
+fromThrow :: HasCallStack => Typeable a => Typeable b => Partial a b => Typeable (Failure a b) => Display (Failure a b) => a -> b
 fromThrow = either throw id . fromWrap
 
 fromMaybe :: Partial a b => Failure a b ~ () => a -> Maybe b
 fromMaybe = eitherToMaybe . fromTry
 
-fromShow :: Typeable a => Typeable b => Display (Failure a b) => Partial a b => a -> Either String b
+fromShow :: Typeable a => Typeable b => Partial a b => Display (Failure a b) => a -> Either String b
 fromShow = first show . fromWrap
 
-fromFail :: MonadFail m => Typeable a => Typeable b => Display (Failure a b) => Partial a b => a -> m b
+fromFail :: MonadFail m => Typeable a => Typeable b => Partial a b => Display (Failure a b) => a -> m b
 fromFail = either fail pure . fromShow
