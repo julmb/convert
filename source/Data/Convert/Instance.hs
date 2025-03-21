@@ -3,14 +3,14 @@
 
 module Data.Convert.Instance () where
 
-import Data.Text (Text)
+import Data.Bits
 import Data.ByteString (ByteString)
+import Data.ByteString qualified as B
+import Data.Text (Text)
 import Data.Text.Encoding qualified as T
+import Data.Text.Encoding.Error (UnicodeException)
 import Data.Convert.Class
 import Numeric.Natural
-import Data.Bits
-import Data.ByteString qualified as B
-import Data.Text.Encoding.Error
 
 instance Convert Bool Natural where
     from False = 0
