@@ -28,7 +28,8 @@ instance Convert Natural ByteString where
         go 0 = Nothing
         go n = Just (fromIntegral n, n !>>. 8)
 
-instance Convert Text ByteString where from = T.encodeUtf8
+instance Convert Text ByteString where
+    from = T.encodeUtf8
 instance Partial ByteString Text where
     type Failure ByteString Text = UnicodeException
     fromTry = T.decodeUtf8'
