@@ -1,18 +1,18 @@
-cabal-version:       3.8
+cabal-version: 3.8
 
-name:                convert
-version:             0.1
+name: convert
+version: 0.1
 
 common configuration
-  default-language:    GHC2024
-  cc-options:          -Wall -Wconversion
-  ghc-options:         -Wall -Wunused-packages -Wmissing-export-lists -Wprepositive-qualified-module -Wno-name-shadowing
+  default-language: GHC2024
+  cc-options: -Wall -Wconversion
+  ghc-options: -Wall -Wunused-packages -Wmissing-export-lists -Wprepositive-qualified-module -Wno-name-shadowing
 
 library
-  import:              configuration
-  build-depends:       base, bytestring ^>= 0.12.2.0, text ^>= 2.1.2
-  hs-source-dirs:      source
-  exposed-modules:     Data.Convert
+  import: configuration
+  build-depends: base, bytestring ^>= 0.12.2.0, text ^>= 2.1.2
+  hs-source-dirs: source
+  exposed-modules: Data.Convert
   other-modules:
     Data.Convert.Tools
     Data.Convert.Class
