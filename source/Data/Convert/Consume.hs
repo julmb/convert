@@ -37,5 +37,5 @@ fromMaybe = eitherToMaybe . fromTry
 fromShow :: Typeable a => Typeable b => Display c => Partial a b c => a -> Either String b
 fromShow = first show . fromWrap
 
-fromFail :: MonadFail m => Typeable a => Typeable b => Display c => Partial a b c => a -> m b
+fromFail :: Typeable a => Typeable b => Display c => Partial a b c => MonadFail m => a -> m b
 fromFail = either fail pure . fromShow
