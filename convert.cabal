@@ -4,7 +4,16 @@ name: convert
 version: 0.1
 
 common configuration
-  default-language: GHC2024
+  default-language: GHC2021
+  default-extensions:
+    DataKinds
+    DerivingStrategies
+    DisambiguateRecordFields
+    ExplicitNamespaces
+    GADTs
+    MonoLocalBinds
+    LambdaCase
+    RoleAnnotations
   cc-options: -Wall -Wconversion
   ghc-options: -Wall -Wunused-packages -Wmissing-export-lists -Wprepositive-qualified-module -Wno-name-shadowing
 
