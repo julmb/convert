@@ -1,0 +1,20 @@
+if we get a faster conversion between natural and bytestring
+	we could include those instances in the convert library
+	see also poseidon 6d77a6d24523d4b69e8354423345061c0c6a5f73
+	https://hackage.haskell.org/package/ghc-bignum-1.3/docs/GHC-Num-Natural.html
+	https://hackage.haskell.org/package/base-4.19.1.0/docs/Data-Array-Byte.html
+	https://hackage.haskell.org/package/ghc-prim-0.13.0/docs/GHC-Prim.html
+	https://hackage.haskell.org/package/primitive
+
+https://gitlab.haskell.org/ghc/ghc/-/wikis/ghc-kinds/poly-typeable
+
+options
+	error type parameter
+		- extra type parameter
+		- non-uniform usage
+		- type classes are mostly beneficial if they can be used uniformly
+		- for different error types, we should probably just use functions explicitly
+		+ instances are cleaner
+		+ static knowledge of error type
+	uniform exception type with multiple constructors for cases
+	uniform exception type with single constructor and multiple exception instances
