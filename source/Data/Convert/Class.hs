@@ -4,7 +4,7 @@
 
 module Data.Convert.Class
 (
-    Convert (..), from, into, fromMaybe, intoMaybe,
+    Convert (..), from, fromMaybe,
     Display (..), ConvertException (..), fromWrap, fromThrow, fromShow, fromFail
 )
 where
@@ -22,14 +22,8 @@ class Convert e a b | a b -> e where convert :: a -> Either e b
 from :: forall a b. Convert Void a b => a -> b
 from = either absurd id . convert
 
-into :: forall b a. Convert Void a b => a -> b
-into = either absurd id . convert
-
 fromMaybe :: forall a b. Convert Unit a b => a -> Maybe b
 fromMaybe = eitherToMaybe . convert
-
-intoMaybe :: forall b a. Convert Unit a b => a -> Maybe b
-intoMaybe = eitherToMaybe . convert
 
 class Display a where display :: a -> Maybe String
 
