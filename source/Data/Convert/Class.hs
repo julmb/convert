@@ -4,7 +4,7 @@
 
 module Data.Convert.Class
 (
-    Convert (..), from, fromMaybe,
+    Convert (..), total, partial,
     Display (..), ConvertException (..), fromWrap, fromThrow, fromShow, fromFail
 )
 where
@@ -19,11 +19,11 @@ import GHC.Stack
 
 class Convert e a b | a b -> e where convert :: a -> Either e b
 
-from :: Convert Void a b => a -> b
-from = either absurd id . convert
+total :: Convert Void a b => a -> b
+total = either absurd id . convert
 
-fromMaybe :: Convert Unit a b => a -> Maybe b
-fromMaybe = eitherToMaybe . convert
+partial :: Convert Unit a b => a -> Maybe b
+partial = eitherToMaybe . convert
 
 class Display a where display :: a -> Maybe String
 
