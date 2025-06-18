@@ -12,21 +12,21 @@ import Data.Text.Encoding.Error (UnicodeException)
 import Data.Convert.Class
 import Numeric.Natural
 
-instance Partial Bool Natural Void where
+instance Convert Bool Natural Void where
     fromTry False = Right 0
     fromTry True = Right 1
-instance Partial Natural Bool () where
+instance Convert Natural Bool () where
     fromTry 0 = Right False
     fromTry 1 = Right True
     fromTry _ = Left ()
 
-instance Partial Natural ByteString Void where
+instance Convert Natural ByteString Void where
     fromTry = Right . B.reverse . B.unfoldr go where
         go 0 = Nothing
         go n = Just (fromIntegral n, n !>>. 8)
-instance Partial ByteString Natural Void where
+instance Convert ByteString Natural Void where
     fromTry = Right . B.foldl' go 0 where
         go n a = n !<<. 8 .|. fromIntegral a
 
-instance Partial Text ByteString Void where fromTry = Right . T.encodeUtf8
-instance Partial ByteString Text UnicodeException where fromTry = T.decodeUtf8'
+instance Convert Text ByteString Void where fromTry = Right . T.encodeUtf8
+instance Convert ByteString Text UnicodeException where fromTry = T.decodeUtf8'

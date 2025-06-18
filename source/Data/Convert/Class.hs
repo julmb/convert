@@ -1,16 +1,16 @@
 {-# LANGUAGE FunctionalDependencies #-}
 
-module Data.Convert.Class (Partial (..), intoTry, from, into) where
+module Data.Convert.Class (Convert (..), intoTry, from, into) where
 
 import Data.Void
 
-class Partial a b c | a b -> c where fromTry :: a -> Either c b
+class Convert a b c | a b -> c where fromTry :: a -> Either c b
 
-intoTry :: forall b a c. Partial a b c => a -> Either c b
+intoTry :: forall b a c. Convert a b c => a -> Either c b
 intoTry = fromTry
 
-from :: Partial a b Void => a -> b
+from :: Convert a b Void => a -> b
 from = either absurd id . fromTry
 
-into :: forall b a. Partial a b Void => a -> b
+into :: forall b a. Convert a b Void => a -> b
 into = from

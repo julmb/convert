@@ -25,17 +25,17 @@ instance (Typeable a, Typeable b, Display c) => Show (ConvertException a b c) wh
         base = printf "could not convert from %s to %s" (show $ typeRep @a) (show $ typeRep @b)
 instance (Typeable a, Typeable b, Typeable c, Display c) => Exception (ConvertException a b c)
 
-fromWrap :: Partial a b c => a -> Either (ConvertException a b c) b
+fromWrap :: Convert a b c => a -> Either (ConvertException a b c) b
 fromWrap = first ConvertException . fromTry
 
-fromThrow :: HasCallStack => Typeable a => Typeable b => Typeable c => Display c => Partial a b c => a -> b
+fromThrow :: HasCallStack => Typeable a => Typeable b => Typeable c => Display c => Convert a b c => a -> b
 fromThrow = either throw id . fromWrap
 
-fromMaybe :: Partial a b () => a -> Maybe b
+fromMaybe :: Convert a b () => a -> Maybe b
 fromMaybe = eitherToMaybe . fromTry
 
-fromShow :: Typeable a => Typeable b => Display c => Partial a b c => a -> Either String b
+fromShow :: Typeable a => Typeable b => Display c => Convert a b c => a -> Either String b
 fromShow = first show . fromWrap
 
-fromFail :: Typeable a => Typeable b => Display c => Partial a b c => MonadFail m => a -> m b
+fromFail :: Typeable a => Typeable b => Display c => Convert a b c => MonadFail m => a -> m b
 fromFail = either fail pure . fromShow
