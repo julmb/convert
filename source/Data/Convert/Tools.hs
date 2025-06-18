@@ -1,7 +1,15 @@
-module Data.Convert.Tools (maybeToEither, eitherToMaybe) where
+{-# LANGUAGE PatternSynonyms #-}
 
-maybeToEither :: Maybe a -> Either () a
-maybeToEither = maybe (Left ()) Right
+module Data.Convert.Tools (Unit, pattern Unit, maybeToEither, eitherToMaybe) where
 
-eitherToMaybe :: Either () a -> Maybe a
-eitherToMaybe = either (\ () -> Nothing) Just
+type Unit = ()
+
+{-# COMPLETE Unit #-}
+pattern Unit :: Unit
+pattern Unit = ()
+
+maybeToEither :: Maybe a -> Either Unit a
+maybeToEither = maybe (Left Unit) Right
+
+eitherToMaybe :: Either Unit a -> Maybe a
+eitherToMaybe = either (\ Unit -> Nothing) Just
