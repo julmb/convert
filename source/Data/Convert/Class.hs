@@ -20,7 +20,7 @@ import GHC.Stack
 class Convert e a b | a b -> e where convert :: a -> Either e b
 
 total :: Convert Void a b => a -> b
-total = either absurd id . convert
+total = fromTotal . convert
 
 partial :: Convert Unit a b => a -> Maybe b
 partial = eitherToMaybe . convert
