@@ -5,7 +5,7 @@
 module Data.Convert.Class
 (
     Convert (..), Total, Partial, total, partial,
-    Display (..), ConvertException (..), convertThrow, fromShow, fromFail
+    Display (..), ConvertException (..), convertThrow, convertShow, convertFail
 )
 where
 
@@ -49,8 +49,8 @@ wrap = first ConvertException . convert
 convertThrow :: HasCallStack => Typeable a => Typeable b => Typeable e => Display e => Convert e a b => a -> b
 convertThrow = either throw id . wrap
 
-fromShow :: Typeable a => Typeable b => Display e => Convert e a b => a -> Either String b
-fromShow = first show . wrap
+convertShow :: Typeable a => Typeable b => Display e => Convert e a b => a -> Either String b
+convertShow = first show . wrap
 
-fromFail :: Typeable a => Typeable b => Display e => Convert e a b => MonadFail m => a -> m b
-fromFail = either fail pure . fromShow
+convertFail :: Typeable a => Typeable b => Display e => Convert e a b => MonadFail m => a -> m b
+convertFail = either fail pure . convertShow
