@@ -1,5 +1,5 @@
-{-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE NoPolyKinds #-}
+{-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE UndecidableInstances #-}
 
 module Data.Convert.Class
