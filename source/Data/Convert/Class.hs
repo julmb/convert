@@ -5,7 +5,7 @@
 module Data.Convert.Class
 (
     Convert (..), Total, Partial, total, partial,
-    Display (..), ConvertException (..), convertThrow, convertShow, convertFail
+    Display (..), ConvertException (..), convertThrow, convertShow
 )
 where
 
@@ -51,6 +51,3 @@ convertThrow = either throw id . wrap
 
 convertShow :: Typeable a => Typeable b => Display e => Convert e a b => a -> Either String b
 convertShow = first show . wrap
-
-convertFail :: Typeable a => Typeable b => Display e => Convert e a b => MonadFail m => a -> m b
-convertFail = either fail pure . convertShow
