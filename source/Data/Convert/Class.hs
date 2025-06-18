@@ -30,6 +30,7 @@ partial = fromPartial . convert
 
 class Display a where display :: a -> Maybe String
 
+instance Display Void where display = absurd
 instance Display Unit where display Unit = Nothing
 instance Display String where display = Just
 instance {-# OVERLAPPABLE #-} Exception e => Display e where display = Just . displayException
