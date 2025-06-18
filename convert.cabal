@@ -25,6 +25,5 @@ library
   other-modules:
     Data.Convert.Tools
     Data.Convert.Class
-    Data.Convert.Consume
     Data.Convert.Numeric
     Data.Convert.Instance
