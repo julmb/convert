@@ -13,21 +13,21 @@ import Data.Convert.Tools
 import Data.Convert.Class
 import Numeric.Natural
 
-instance Convert Bool Natural Void where
+instance Convert Void Bool Natural where
     convert False = Right 0
     convert True = Right 1
-instance Convert Natural Bool Unit where
+instance Convert Unit Natural Bool where
     convert 0 = Right False
     convert 1 = Right True
     convert _ = Left Unit
 
-instance Convert Natural ByteString Void where
+instance Convert Void Natural ByteString where
     convert = Right . B.reverse . B.unfoldr go where
         go 0 = Nothing
         go n = Just (fromIntegral n, n !>>. 8)
-instance Convert ByteString Natural Void where
+instance Convert Void ByteString Natural where
     convert = Right . B.foldl' go 0 where
         go n a = n !<<. 8 .|. fromIntegral a
 
-instance Convert Text ByteString Void where convert = Right . T.encodeUtf8
-instance Convert ByteString Text UnicodeException where convert = T.decodeUtf8'
+instance Convert Void Text ByteString where convert = Right . T.encodeUtf8
+instance Convert UnicodeException ByteString Text where convert = T.decodeUtf8'
