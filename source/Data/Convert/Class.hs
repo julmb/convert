@@ -49,8 +49,8 @@ wrap = first ConvertException . convert
 convertThrow :: HasCallStack => Typeable a => Typeable b => Typeable e => Display e => Convert e a b => a -> b
 convertThrow = either throw id . wrap
 
-fromShow :: Display e => Typeable a => Typeable b => Convert e a b => a -> Either String b
+fromShow :: Typeable a => Typeable b => Display e => Convert e a b => a -> Either String b
 fromShow = first show . wrap
 
-fromFail :: Display e => Typeable a => Typeable b => Convert e a b => MonadFail m => a -> m b
+fromFail :: Typeable a => Typeable b => Display e => Convert e a b => MonadFail m => a -> m b
 fromFail = either fail pure . fromShow
