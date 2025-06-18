@@ -17,16 +17,19 @@ import Data.Convert.Tools
 import Text.Printf
 import GHC.Stack
 
-class Convert a b c | a b -> c where fromTry :: a -> Either c b
+class Convert a b c | a b -> c where convert :: a -> Either c b
+
+fromTry :: forall a b c. Convert a b c => a -> Either c b
+fromTry = convert
 
 intoTry :: forall b a c. Convert a b c => a -> Either c b
-intoTry = fromTry
+intoTry = convert
 
-from :: Convert a b Void => a -> b
-from = either absurd id . fromTry
+from :: forall a b. Convert a b Void => a -> b
+from = either absurd id . convert
 
 into :: forall b a. Convert a b Void => a -> b
-into = from
+into = either absurd id . convert
 
 class Display a where display :: a -> Maybe String
 

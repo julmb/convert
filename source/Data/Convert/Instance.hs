@@ -14,20 +14,20 @@ import Data.Convert.Class
 import Numeric.Natural
 
 instance Convert Bool Natural Void where
-    fromTry False = Right 0
-    fromTry True = Right 1
+    convert False = Right 0
+    convert True = Right 1
 instance Convert Natural Bool Unit where
-    fromTry 0 = Right False
-    fromTry 1 = Right True
-    fromTry _ = Left Unit
+    convert 0 = Right False
+    convert 1 = Right True
+    convert _ = Left Unit
 
 instance Convert Natural ByteString Void where
-    fromTry = Right . B.reverse . B.unfoldr go where
+    convert = Right . B.reverse . B.unfoldr go where
         go 0 = Nothing
         go n = Just (fromIntegral n, n !>>. 8)
 instance Convert ByteString Natural Void where
-    fromTry = Right . B.foldl' go 0 where
+    convert = Right . B.foldl' go 0 where
         go n a = n !<<. 8 .|. fromIntegral a
 
-instance Convert Text ByteString Void where fromTry = Right . T.encodeUtf8
-instance Convert ByteString Text UnicodeException where fromTry = T.decodeUtf8'
+instance Convert Text ByteString Void where convert = Right . T.encodeUtf8
+instance Convert ByteString Text UnicodeException where convert = T.decodeUtf8'
