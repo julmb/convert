@@ -4,7 +4,7 @@
 
 module Data.Convert.Class
 (
-    Convert (..), fromTry, intoTry, from, into, fromMaybe, intoMaybe,
+    Convert (..), from, into, fromMaybe, intoMaybe,
     Display (..), ConvertException (..), fromWrap, fromThrow, fromShow, fromFail
 )
 where
@@ -18,12 +18,6 @@ import Text.Printf
 import GHC.Stack
 
 class Convert e a b | a b -> e where convert :: a -> Either e b
-
-fromTry :: forall a b e. Convert e a b => a -> Either e b
-fromTry = convert
-
-intoTry :: forall b a e. Convert e a b => a -> Either e b
-intoTry = convert
 
 from :: forall a b. Convert Void a b => a -> b
 from = either absurd id . convert
