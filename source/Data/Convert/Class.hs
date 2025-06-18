@@ -5,7 +5,7 @@
 module Data.Convert.Class
 (
     Convert (..), Total, Partial, total, partial,
-    Display (..), ConvertException (..), fromWrap, fromThrow, fromShow, fromFail
+    Display (..), ConvertException (..), fromThrow, fromShow, fromFail
 )
 where
 
@@ -43,14 +43,14 @@ instance (Typeable a, Typeable b, Display e) => Show (ConvertException a b e) wh
         base = printf "could not convert from %s to %s" (show $ typeRep @a) (show $ typeRep @b)
 instance (Typeable a, Typeable b, Typeable e, Display e) => Exception (ConvertException a b e)
 
-fromWrap :: forall a b e. Convert e a b => a -> Either (ConvertException a b e) b
+fromWrap :: Convert e a b => a -> Either (ConvertException a b e) b
 fromWrap = first ConvertException . convert
 
 fromThrow :: forall a b e. HasCallStack => Typeable e => Display e => Typeable a => Typeable b => Convert e a b => a -> b
 fromThrow = either throw id . fromWrap
 
-fromShow :: forall a b e. Display e => Typeable a => Typeable b => Convert e a b => a -> Either String b
+fromShow :: Display e => Typeable a => Typeable b => Convert e a b => a -> Either String b
 fromShow = first show . fromWrap
 
-fromFail :: forall m a b e. Display e => Typeable a => Typeable b => Convert e a b => MonadFail m => a -> m b
+fromFail :: Display e => Typeable a => Typeable b => Convert e a b => MonadFail m => a -> m b
 fromFail = either fail pure . fromShow
