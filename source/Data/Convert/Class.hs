@@ -19,10 +19,10 @@ import GHC.Stack
 
 class Convert e a b | a b -> e where convert :: a -> Either e b
 
-from :: forall a b. Convert Void a b => a -> b
+from :: Convert Void a b => a -> b
 from = either absurd id . convert
 
-fromMaybe :: forall a b. Convert Unit a b => a -> Maybe b
+fromMaybe :: Convert Unit a b => a -> Maybe b
 fromMaybe = eitherToMaybe . convert
 
 class Display a where display :: a -> Maybe String
