@@ -30,7 +30,7 @@ into = from
 
 class Display a where display :: a -> Maybe String
 
-instance Display () where display () = Nothing
+instance Display Unit where display Unit = Nothing
 instance Display String where display = Just
 instance {-# OVERLAPPABLE #-} Exception e => Display e where display = Just . displayException
 
@@ -48,7 +48,7 @@ fromWrap = first ConvertException . fromTry
 fromThrow :: HasCallStack => Typeable a => Typeable b => Typeable c => Display c => Convert a b c => a -> b
 fromThrow = either throw id . fromWrap
 
-fromMaybe :: Convert a b () => a -> Maybe b
+fromMaybe :: Convert a b Unit => a -> Maybe b
 fromMaybe = eitherToMaybe . fromTry
 
 fromShow :: Typeable a => Typeable b => Display c => Convert a b c => a -> Either String b

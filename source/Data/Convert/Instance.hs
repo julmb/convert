@@ -9,16 +9,17 @@ import Data.ByteString qualified as B
 import Data.Text (Text)
 import Data.Text.Encoding qualified as T
 import Data.Text.Encoding.Error (UnicodeException)
+import Data.Convert.Tools
 import Data.Convert.Class
 import Numeric.Natural
 
 instance Convert Bool Natural Void where
     fromTry False = Right 0
     fromTry True = Right 1
-instance Convert Natural Bool () where
+instance Convert Natural Bool Unit where
     fromTry 0 = Right False
     fromTry 1 = Right True
-    fromTry _ = Left ()
+    fromTry _ = Left Unit
 
 instance Convert Natural ByteString Void where
     fromTry = Right . B.reverse . B.unfoldr go where
