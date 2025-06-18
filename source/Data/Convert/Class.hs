@@ -23,7 +23,7 @@ total :: Convert Void a b => a -> b
 total = fromTotal . convert
 
 partial :: Convert Unit a b => a -> Maybe b
-partial = eitherToMaybe . convert
+partial = fromPartial . convert
 
 class Display a where display :: a -> Maybe String
 

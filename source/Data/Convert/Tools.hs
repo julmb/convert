@@ -1,6 +1,6 @@
 {-# LANGUAGE PatternSynonyms #-}
 
-module Data.Convert.Tools (Unit, pattern Unit, fromTotal, intoTotal, maybeToEither, eitherToMaybe) where
+module Data.Convert.Tools (Unit, pattern Unit, fromTotal, intoTotal, fromPartial, intoPartial) where
 
 import Data.Void
 
@@ -16,8 +16,8 @@ fromTotal = either absurd id
 intoTotal :: a -> Either Void a
 intoTotal = Right
 
-maybeToEither :: Maybe a -> Either Unit a
-maybeToEither = maybe (Left Unit) Right
+fromPartial :: Either Unit a -> Maybe a
+fromPartial = either (\ Unit -> Nothing) Just
 
-eitherToMaybe :: Either Unit a -> Maybe a
-eitherToMaybe = either (\ Unit -> Nothing) Just
+intoPartial :: Maybe a -> Either Unit a
+intoPartial = maybe (Left Unit) Right
