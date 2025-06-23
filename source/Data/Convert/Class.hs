@@ -15,7 +15,6 @@ import Data.Void
 import Data.Bifunctor
 import Data.Convert.Tools
 import Text.Printf
-import GHC.Stack
 
 class Convert e a b | a b -> e where convert :: a -> Either e b
 
@@ -48,7 +47,9 @@ instance (Typeable a, Typeable b, Typeable e, Display e) => Exception (ConvertEx
 wrap :: Convert e a b => a -> Either (ConvertException a b e) b
 wrap = first ConvertException . convert
 
-cast :: HasCallStack => Typeable a => Typeable b => Typeable e => Display e => Convert e a b => a -> b
+-- TODO: in base-4.21, `throw` gains `HasCallStack` constraint
+--       should we propagate this constraint here?
+cast :: Typeable a => Typeable b => Typeable e => Display e => Convert e a b => a -> b
 cast = either throw id . wrap
 
 spell :: Typeable a => Typeable b => Display e => Convert e a b => a -> Either String b
