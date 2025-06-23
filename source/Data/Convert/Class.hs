@@ -19,6 +19,8 @@ import GHC.Stack
 
 class Convert e a b | a b -> e where convert :: a -> Either e b
 
+instance Convert Void a a where convert = Right
+
 type Total = Convert Void
 type Partial = Convert Unit
 
